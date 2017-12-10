@@ -163,10 +163,11 @@ The offset calculation is shown as:
 
 ```python
 # FIND CENTER Plot center
+xm_per_pix = 3.7/700
 camera_position = result.shape[1]/2
 lane_center = (right_fitx[719] + left_fitx[719])/2
 center_offset_pixels = abs(camera_position - lane_center)
-vehicle_position = center_offset_pixels / 12800 * 3.7
+vehicle_position = center_offset_pixels * xm_per_pix
 left_or_right = "left" if vehicle_position > 0 else "right"
 result = cv2.putText(result, 'Vehicle is %.2fm %s of center' % (np.abs(vehicle_position), left_or_right), (50, 100), font, 1, (255, 255, 255), 2)
 ```
@@ -197,4 +198,4 @@ I have produced what I would call a MVP, minimally viable product. It achieves t
 
 I did not fully implement the faster lane find based on the previous lane position and so on my current computer it takes about 2 minutes to process a 50 second clip. Thus it would not work in real time.
 
-I have not implemented any anomaly filter, so strong changes in brightness or distracting lines on the road would fool the current system.
+I have not implemented any anomaly filter, so strong changes in brightness or distracting lines on the road would fool the current system. I would also expect the current system to fail in other scenarios like at night or on snowy days, even rain if it caused the road to be reflective to light. This method relies completely on the lane lines. A real system would require a back-up method for when there are no lane lines at all.
